@@ -1,0 +1,4 @@
+task,duration_hours,LAeq,LCpeak,n_measurements,samples,duration_uncertainty_hours
+Grinding,1.5,97,128,3,96|97|98,0.1
+Welding,3,88,118,3,87|88|89,0.2
+Assembly,3.5,78,103,3,77|78|79,0.2

@@ -1,0 +1,243 @@
+{
+  "schema_version": "1.0",
+  "generator": "noisedose 0.1.0",
+  "worker": "Synthetic operator",
+  "area": "workshop tasks",
+  "source": "examples/workshop_tasks.csv",
+  "measurement_hours": 8.0,
+  "projection_shift_hours": 8.0,
+  "laeq_db": 90.80604645779661,
+  "lex8_db": 90.80604645779661,
+  "metrics": [
+    {
+      "standard": "osha-pel",
+      "dose_percent": 49.481546653983536,
+      "dose_basis": "thresholded dosimeter dose",
+      "twa_db": 84.92481250360578,
+      "lex8_db": 90.80604645779661,
+      "projected_8h_dose_percent": 49.481546653983536,
+      "projected_8h_twa_db": 84.92481250360578,
+      "projected_shift_dose_percent": 49.481546653983536,
+      "projected_shift_twa_db": 84.92481250360578,
+      "criterion_db": 90,
+      "threshold_db": 90,
+      "exchange_db": 5,
+      "exit_code": 1,
+      "status": "ACTION LEVEL",
+      "upper_action_reached": false,
+      "peak": null,
+      "limit_basis": "unprotected",
+      "osha_hc_dose_percent": 77.9012322760535
+    },
+    {
+      "standard": "osha-hc",
+      "dose_percent": 77.9012322760535,
+      "dose_basis": "thresholded dosimeter dose",
+      "twa_db": 88.19859027383298,
+      "lex8_db": 90.80604645779661,
+      "projected_8h_dose_percent": 77.9012322760535,
+      "projected_8h_twa_db": 88.19859027383298,
+      "projected_shift_dose_percent": 77.9012322760535,
+      "projected_shift_twa_db": 88.19859027383298,
+      "criterion_db": 90,
+      "threshold_db": 80,
+      "exchange_db": 5,
+      "exit_code": 1,
+      "status": "ACTION LEVEL",
+      "upper_action_reached": false,
+      "peak": null,
+      "limit_basis": "unprotected",
+      "osha_hc_dose_percent": 77.9012322760535
+    },
+    {
+      "standard": "niosh-rel",
+      "dose_percent": 375.0,
+      "dose_basis": "thresholded dosimeter dose",
+      "twa_db": 90.74031267727719,
+      "lex8_db": 90.80604645779661,
+      "projected_8h_dose_percent": 375.0,
+      "projected_8h_twa_db": 90.74031267727719,
+      "projected_shift_dose_percent": 375.0,
+      "projected_shift_twa_db": 90.74031267727719,
+      "criterion_db": 85,
+      "threshold_db": 80,
+      "exchange_db": 3,
+      "exit_code": 2,
+      "status": "OVER LIMIT",
+      "upper_action_reached": false,
+      "peak": null,
+      "limit_basis": "unprotected",
+      "osha_hc_dose_percent": null
+    },
+    {
+      "standard": "eu",
+      "dose_percent": 380.7190830257806,
+      "dose_basis": "energy index relative to 85 dBA; not an EU legal dose",
+      "twa_db": 90.80604645779661,
+      "lex8_db": 90.80604645779661,
+      "projected_8h_dose_percent": 380.7190830257806,
+      "projected_8h_twa_db": 90.80604645779661,
+      "projected_shift_dose_percent": 380.7190830257806,
+      "projected_shift_twa_db": 90.80604645779661,
+      "criterion_db": 85,
+      "threshold_db": null,
+      "exchange_db": 3.010299956639812,
+      "exit_code": 2,
+      "status": "OVER LIMIT",
+      "upper_action_reached": true,
+      "peak": {
+        "level_db_c": 128.0,
+        "status": "BELOW ACTION",
+        "exit_code": 0,
+        "upper_action_reached": false,
+        "limit_reached": false,
+        "basis": "unprotected C-weighted peak; no scalar protector credit"
+      },
+      "limit_basis": "unprotected screen; attenuation estimates do not establish EU limit compliance",
+      "osha_hc_dose_percent": null
+    }
+  ],
+  "exit_code": 2,
+  "segments": [
+    {
+      "name": "Grinding",
+      "duration_hours": 1.5,
+      "level_db": 97.0,
+      "peak_db": 128.0,
+      "samples": [
+        96.0,
+        97.0,
+        98.0
+      ],
+      "duration_uncertainty_hours": 0.1,
+      "timestamp": null
+    },
+    {
+      "name": "Welding",
+      "duration_hours": 3.0,
+      "level_db": 88.0,
+      "peak_db": 118.0,
+      "samples": [
+        87.0,
+        88.0,
+        89.0
+      ],
+      "duration_uncertainty_hours": 0.2,
+      "timestamp": null
+    },
+    {
+      "name": "Assembly",
+      "duration_hours": 3.5,
+      "level_db": 78.0,
+      "peak_db": 103.0,
+      "samples": [
+        77.0,
+        78.0,
+        79.0
+      ],
+      "duration_uncertainty_hours": 0.2,
+      "timestamp": null
+    }
+  ],
+  "contributions": [
+    {
+      "task": "Grinding",
+      "hours": 1.5,
+      "level_db": 97.0,
+      "energy_percent": 78.0542627978372,
+      "dose_percent_by_standard": {
+        "osha-pel": 49.481546653983536,
+        "osha-hc": 49.481546653983536,
+        "niosh-rel": 300.0,
+        "eu": 297.16747358645875
+      }
+    },
+    {
+      "task": "Welding",
+      "hours": 3.0,
+      "level_db": 88.0,
+      "energy_percent": 19.65289898701147,
+      "dose_percent_by_standard": {
+        "osha-pel": 0.0,
+        "osha-hc": 28.419685622069967,
+        "niosh-rel": 75.0,
+        "eu": 74.82233681133299
+      }
+    },
+    {
+      "task": "Assembly",
+      "hours": 3.5,
+      "level_db": 78.0,
+      "energy_percent": 2.292838215151338,
+      "dose_percent_by_standard": {
+        "osha-pel": 0.0,
+        "osha-hc": 0.0,
+        "niosh-rel": 0.0,
+        "eu": 8.72927262798885
+      }
+    }
+  ],
+  "protectors": [
+    {
+      "name": "foam",
+      "method": "osha50",
+      "attenuation_db": 11.0,
+      "protected_level_db": 79.80604645779661,
+      "rating": "acceptable",
+      "assumptions": [
+        "Laboratory ratings estimate attenuation; individual field fit and protection are not assured.",
+        "Attenuation is floored at zero; impulse noise and peak protection are not assessed.",
+        "NRR minus 7 dB for A weighting, then 50% attenuation retained."
+      ],
+      "baseline": "unthresholded daily LEX,8h",
+      "eu_daily_limit_estimate": {
+        "limit_db_a": 87.0,
+        "estimated_below_daily_limit": true,
+        "peak_limit_assessed": false,
+        "note": "Screening only; unprotected action obligations remain and peak protection requires separate evidence."
+      }
+    }
+  ],
+  "uncertainty": {
+    "method": "simplified first-order task model; not full ISO 9612 conformity",
+    "complete_sampling": true,
+    "combined_standard_db": 1.8762925503887604,
+    "expanded_db": 3.0958827081414544,
+    "coverage_factor": 1.65,
+    "coverage": "one-sided approximately 95%, normal approximation",
+    "upper_95_db": 93.90192916593807,
+    "instrument_class": 2,
+    "instrument_standard_db": 1.5,
+    "position_standard_db": 1.0,
+    "duration_assumption": "exact unless supplied",
+    "tasks": [
+      {
+        "task": "Grinding",
+        "energy_weight": 0.7805426279783719,
+        "sampling_standard_db": 0.5773502691896258,
+        "duration_standard_db": 0.28952965460216784
+      },
+      {
+        "task": "Welding",
+        "energy_weight": 0.1965289898701147,
+        "sampling_standard_db": 0.5773502691896258,
+        "duration_standard_db": 0.28952965460216784
+      },
+      {
+        "task": "Assembly",
+        "energy_weight": 0.022928382151513382,
+        "sampling_standard_db": 0.5773502691896258,
+        "duration_standard_db": 0.24816827537328673
+      }
+    ]
+  },
+  "warnings": [],
+  "recommendations": [
+    "Enrol exposed workers in a hearing conservation programme; arrange audiometry, training and monitoring as applicable.",
+    "Engineering controls first: follow the hierarchy of controls, reduce noise at source, isolate equipment and then review exposure time.",
+    "Select and individually fit-test hearing protection; verify continuous correct use and repeat the assessment after controls.",
+    "EU upper action level reached: implement a technical/organisational noise reduction programme and enforce protector use as applicable."
+  ],
+  "methodology": "Actual dose uses recorded durations and each preset's threshold and exchange rate. TWA and LEX,8h are normalized to 8 hours. Projections repeat the measured exposure mix; they are estimates, not additional observations. EU action levels use unprotected exposure; 87 dBA / 140 dBC limit screening receives no estimated protector credit. Exposure-limit equality is ACTION LEVEL; OVER LIMIT denotes strictly above the limit. See docs/methodology.md for formulas and references.",
+  "disclaimer": "Not a substitute for a competent person's assessment with calibrated class 1/2 instruments. Estimates depend on representative measurements and correct protector fit. NIOSH/ACGIH are guidance criteria, not OSHA permissible limits."
+}

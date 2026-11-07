@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "noisedose"
+version = "0.1.0"
+description = "Occupational noise exposure calculations and screening reports"
+readme = "README.md"
+authors = [{name = "noisedose contributors"}]
+keywords = ["noise", "occupational-health", "noise-dose", "hearing-protection", "acoustics"]
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = []
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/Pinnnnnneapple/noisedose"
+Repository = "https://github.com/Pinnnnnneapple/noisedose"
+Issues = "https://github.com/Pinnnnnneapple/noisedose/issues"
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+noisedose = "noisedose.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["noisedose*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

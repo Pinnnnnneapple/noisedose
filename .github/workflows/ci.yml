@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install development dependencies
+        run: python -m pip install -e ".[dev]"
+      - name: Run tests
+        run: python -m pytest
+      - name: Check CLI acceptance examples
+        shell: python
+        run: |
+          from pathlib import Path
+          import shutil
+          import subprocess
+
+          executable = shutil.which("noisedose")
+          if executable is None:
+              raise SystemExit("Installed noisedose console script was not found")
+
+          cases = (
+              ("sawmill", "log", (".csv",), 2),
+              ("workshop", "tasks", (".csv", ".json"), 2),
+              ("office", "log", (".csv",), 0),
+          )
+          for family, command, suffixes, expected in cases:
+              paths = sorted(
+                  path for path in Path("examples").glob(family + "*")
+                  if path.is_file() and path.suffix.lower() in suffixes
+              )
+              if not paths:
+                  raise SystemExit("Missing acceptance example: " + family)
+              for path in paths:
+                  result = subprocess.run(
+                      [executable, command, str(path)],
+                      capture_output=True, text=True,
+                      encoding="utf-8", errors="replace", timeout=60,
+                  )
+                  print(str(path) + ": exit " + str(result.returncode))
+                  print(result.stdout)
+                  if result.stderr:
+                      print(result.stderr)
+                  if result.returncode != expected:
+                      raise SystemExit(
+                          str(path) + ": expected exit " + str(expected)
+                          + ", got " + str(result.returncode)
+                      )
