@@ -7,12 +7,21 @@ from pathlib import Path
 
 import pytest
 
-from noisedose.cli import main
+from noisedose.cli import _parser, main
 from noisedose.io import load_tasks
 from noisedose.models import Segment
 from noisedose.report import build_report, console_table, to_html, to_json, to_markdown
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_parser_help_formats_all_commands():
+    parser = _parser()
+    rendered = [parser.format_help()]
+    subparsers = parser._subparsers._group_actions[0].choices
+    rendered.extend(subparser.format_help() for subparser in subparsers.values())
+    assert "100%" in rendered[0]
+    assert "50%" in rendered[list(subparsers).index("protect") + 1]
 
 
 @pytest.mark.parametrize("command,file,expected", [

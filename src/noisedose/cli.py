@@ -51,7 +51,7 @@ def _parser() -> Parser:
     calc.add_argument("--level", type=float, required=True)
     calc.add_argument("--hours", type=float, required=True)
     calc.add_argument("--standard", choices=STANDARDS, default="osha-pel")
-    allowed = commands.add_parser("allowed", help="Hours to 100% dose under preset settings")
+    allowed = commands.add_parser("allowed", help="Hours to 100%% dose under preset settings")
     allowed.add_argument("--level", type=float, required=True)
     allowed.add_argument("--standard", choices=STANDARDS, default="osha-pel")
     allowed.add_argument("--current-dose", type=float, default=0)
@@ -61,7 +61,7 @@ def _parser() -> Parser:
     protect.add_argument("--nrr2", type=float, help="Second protector NRR for dual protection")
     protect.add_argument("--type", default="foam", choices=("foam", "earmuff", "muff", "other", "plug"))
     protect.add_argument("--method", choices=("osha", "osha50", "niosh", "snr", "hml"), default="osha")
-    protect.add_argument("--safety-factor", action="store_true", help="Apply OSHA 50% attenuation variant")
+    protect.add_argument("--safety-factor", action="store_true", help="Apply OSHA 50%% attenuation variant")
     for field in ("snr", "lc", "h", "m", "l"):
         protect.add_argument("--" + field, type=float)
     commands.add_parser("standards", help="List settings and exposure criteria")
