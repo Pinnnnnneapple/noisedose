@@ -13,13 +13,13 @@ from noisedose.models import Segment
 
 def write_text(tmp_path, text, filename="input.csv"):
     path = tmp_path / filename
-    path.write_text(text, encoding="utf-8")
+    path.write_bytes(text.encode("utf-8"))
     return path
 
 
-def write_csv(tmp_path, rows, delimiter=",", bom=False):
+def write_csv(tmp_path, rows, delimiter=",", bom=False, lineterminator="\r\n"):
     stream = io.StringIO(newline="")
-    writer = csv.writer(stream, delimiter=delimiter)
+    writer = csv.writer(stream, delimiter=delimiter, lineterminator=lineterminator)
     writer.writerows(rows)
     return write_text(tmp_path, ("\ufeff" if bom else "") + stream.getvalue())
 
@@ -48,15 +48,49 @@ def json_error(path):
 
 @pytest.mark.parametrize("delimiter", [",", ";", "\t"])
 @pytest.mark.parametrize("bom", [False, True])
-def test_log_delimiters_and_bom(tmp_path, delimiter, bom):
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n", "\r"], ids=["lf", "crlf", "cr"])
+def test_log_delimiters_and_bom(tmp_path, delimiter, bom, line_ending):
     path = write_csv(tmp_path, [["timestamp", "LAeq", "LCpeak"],
-                               ["0", "80.5", "103"], ["2", "82", "105"]], delimiter, bom)
+                               ["0", "80.5", "103"], ["2", "82", "105"]],
+                     delimiter, bom, line_ending)
     result = load_log(path)
     assert isinstance(result, list)
     assert all(isinstance(segment, Segment) for segment in result)
     assert [s.level_db for s in result] == [80.5, 82]
     assert [s.peak_db for s in result] == [103, 105]
     assert [s.duration_hours for s in result] == pytest.approx([2 / 3600] * 2)
+
+
+@pytest.mark.parametrize("loader,body", [
+    (load_log, "time,LAeq\n0,80\n2,82"),
+    (load_tasks, "name,hours,LAeq\nCaf\u00e9,1,80\nAssembly,2,82"),
+])
+@pytest.mark.parametrize("bom", [False, True])
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n", "\r"], ids=["lf", "crlf", "cr"])
+@pytest.mark.parametrize("trailing_lines", [0, 1, 2, 3])
+def test_csv_line_endings_and_trailing_blanks(tmp_path, loader, body, bom,
+                                             line_ending, trailing_lines):
+    content = ("\ufeff" if bom else "") + body.replace("\n", line_ending)
+    content += line_ending * trailing_lines
+    path = write_text(tmp_path, content)
+    segments = loader(path)
+    assert [s.level_db for s in segments] == [80, 82]
+    if loader is load_log:
+        assert [s.timestamp for s in segments] == ["0", "2"]
+        assert [s.duration_hours for s in segments] == pytest.approx([2 / 3600] * 2)
+    else:
+        assert [s.name for s in segments] == ["Caf\u00e9", "Assembly"]
+        assert [s.duration_hours for s in segments] == [1, 2]
+
+
+@pytest.mark.parametrize("loader,body", [
+    (load_log, "report\ntime,LAeq\n0,80\n\n2,82\n\n"),
+    (load_tasks, "report\nname,hours,LAeq\nWork,1,80\n\nAssembly,2,82\n\n"),
+])
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n", "\r"], ids=["lf", "crlf", "cr"])
+def test_csv_interior_blank_line_is_error(tmp_path, loader, body, line_ending):
+    path = write_text(tmp_path, body.replace("\n", line_ending))
+    csv_error(loader, path, 4)
 
 
 @pytest.mark.parametrize("header", ["LAeq", "LAeq,T", "LAS", "LAF", "Lavg", "dBA",
@@ -443,7 +477,7 @@ def test_tasks_csv_preamble_and_decimal_comma_samples(tmp_path, delimiter):
             ["Work", "1,5", "80,5|90,5", "2", "0,25"]]
     path = write_csv(tmp_path, rows, delimiter, bom=True)
     path.write_text("\ufeffInstrument report\nlocation: factory\n" + path.read_text(encoding="utf-8-sig"),
-                    encoding="utf-8")
+                    encoding="utf-8", newline="")
     segment = load_tasks(path)[0]
     assert segment.duration_hours == 1.5
     assert segment.duration_uncertainty_hours == 0.25

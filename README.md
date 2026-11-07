@@ -4,7 +4,7 @@ Occupational noise dose, exposure and hearing-protector estimates from ordinary 
 
 [![CI](https://github.com/Pinnnnnneapple/noisedose/actions/workflows/ci.yml/badge.svg)](https://github.com/Pinnnnnneapple/noisedose/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-![Python 3.9–3.13](https://img.shields.io/badge/python-3.9%E2%80%933.13-blue.svg)
+![Python 3.10–3.14](https://img.shields.io/badge/python-3.10%E2%80%933.14-blue.svg)
 
 ## Why
 
@@ -25,7 +25,7 @@ Use it to compare exposure criteria, identify the tasks contributing most acoust
 
 ## Install
 
-Python 3.9 or later is required.
+Python 3.10 or later is required.
 
 ```sh
 pip install git+https://github.com/Pinnnnnneapple/noisedose
@@ -202,7 +202,7 @@ Each reading describes its **forward interval**. The final interval uses the med
 
 Recognized A-weighted columns include `LAeq`, `LAeq,T`, `LAS`, `LAF`, `Lavg`, and `dBA`, with common unit suffixes. `LCpeak` or `Peak` supplies an optional C-weighted peak **only if its weighting is verified**. Multiple level columns require `--level-column`; multiple peaks require `--peak-column`. LAS/LAF snapshots and instrument-specific Lavg settings need professional interpretation before use as representative equivalent levels.
 
-Comma, semicolon and tab delimiters, UTF-8 BOM, and preamble lines are supported. Decimal commas work in semicolon/tab files. Use ISO datetimes, clock times or numeric elapsed seconds; timestamps must strictly increase. Midnight rollover from clock-only data is not guessed. Malformed rows after the header produce an input error with location context.
+Comma, semicolon and tab delimiters, UTF-8 BOM, and preamble lines are supported. CRLF, LF and lone CR line endings are accepted, and trailing blank lines are ignored. Decimal commas work in semicolon/tab files. Use ISO datetimes, clock times or numeric elapsed seconds; timestamps must strictly increase. Midnight rollover from clock-only data is not guessed. Malformed rows and empty rows between records produce an input error with location context.
 
 ### Task CSV or JSON
 
@@ -244,7 +244,7 @@ assert weekly_lex([85, 85, 85, 85, 85]) == 85.0
 plan = load_tasks("examples/workshop_tasks.csv")
 uncertainty = task_uncertainty(plan, instrument_class=1)
 report = build_report(plan, task_based=True, instrument_class=1, worker="Operator")
-with open("assessment.html", "w", encoding="utf-8") as stream:
+with open("assessment.html", "w", encoding="utf-8", newline="\n") as stream:
     stream.write(to_html(report))
 ```
 
@@ -318,7 +318,7 @@ python3 examples/generate_examples.py
 PYTHONPATH=src python3 -m pytest -q
 ```
 
-Tests cover hand calculations, thresholds, inverse conversions, task uncertainty, parsing failures, CLI return codes, report escaping, strict JSON and committed report consistency. CI runs Python 3.9–3.13 on Ubuntu, Windows and macOS and checks the installed console script against all examples. No dependencies need to be installed when running with `PYTHONPATH=src` and an existing pytest.
+Tests cover hand calculations, thresholds, inverse conversions, task uncertainty, parsing failures, CLI return codes, report escaping, strict JSON and committed report consistency. CI runs Python 3.10–3.14 on Ubuntu, Windows and macOS and checks the installed console script against all examples. No dependencies need to be installed when running with `PYTHONPATH=src` and an existing pytest.
 
 ## Limitations and disclaimer
 

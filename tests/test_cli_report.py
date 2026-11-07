@@ -20,15 +20,19 @@ ROOT = Path(__file__).resolve().parents[1]
     ("tasks", "workshop_tasks.csv", 2), ("log", "office_quiet.csv", 0),
 ])
 def test_examples_and_outputs(command, file, expected, tmp_path, capsys):
-    args = [command, str(ROOT / "examples" / file)]
+    args = [command, str(ROOT / "examples" / file), "--worker", "Op\u00e9rateur \u6e2c\u5b9a"]
     for fmt in ("html", "json", "md"):
         args.extend(["--" + fmt, str(tmp_path / ("report." + fmt))])
     assert main(args) == expected
     output = capsys.readouterr().out
     assert all(s in output for s in ["osha-pel", "osha-hc", "niosh-rel", "eu"])
-    assert json.loads((tmp_path / "report.json").read_text())["exit_code"] == expected
-    assert "<!doctype html>" in (tmp_path / "report.html").read_text()
-    assert "# Noise exposure assessment" in (tmp_path / "report.md").read_text()
+    report = json.loads((tmp_path / "report.json").read_text(encoding="utf-8"))
+    assert report["exit_code"] == expected
+    assert report["worker"] == "Op\u00e9rateur \u6e2c\u5b9a"
+    assert "<!doctype html>" in (tmp_path / "report.html").read_text(encoding="utf-8")
+    assert "# Noise exposure assessment" in (tmp_path / "report.md").read_text(encoding="utf-8")
+    for fmt, render in [("json", to_json), ("html", to_html), ("md", to_markdown)]:
+        assert (tmp_path / ("report." + fmt)).read_bytes() == render(report).encode("utf-8")
 
 
 @pytest.mark.parametrize("args,expected,text", [
@@ -74,9 +78,9 @@ def test_input_error_code(args, capsys):
 def test_no_input_overwrite(tmp_path, capsys):
     path = tmp_path / "plan.csv"
     original = "task,hours,LAeq\na,8,85\n"
-    path.write_text(original)
+    path.write_text(original, encoding="utf-8", newline="")
     assert main(["tasks", str(path), "--json", str(path)]) == 3
-    assert path.read_text() == original
+    assert path.read_text(encoding="utf-8") == original
 
 
 def test_distinct_output_paths(tmp_path):

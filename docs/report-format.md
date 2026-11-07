@@ -2,6 +2,8 @@
 
 `noisedose log` and `noisedose tasks` accept `--json`, `--md` and `--html` together. HTML is one file with inline CSS and SVG, without scripts, external fonts, images or network requests. All input-derived HTML text is escaped. Markdown also escapes raw HTML and table delimiters.
 
+Report files use UTF-8 encoding and LF line endings on every operating system.
+
 ## JSON version 1.0
 
 The root `schema_version` string is `"1.0"`; `generator` identifies the package version. Existing fields retain their meaning within this schema version. Consumers should allow additional fields and select metric rows by `standard`, not array position. Missing, undefined or unassessed numeric quantities are `null`, never nonstandard JSON `NaN`/`Infinity`. In particular, a zero thresholded dose has no finite TWA.

@@ -9,17 +9,17 @@ description = "Occupational noise exposure calculations and screening reports"
 readme = "README.md"
 authors = [{name = "noisedose contributors"}]
 keywords = ["noise", "occupational-health", "noise-dose", "hearing-protection", "acoustics"]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE"]
 dependencies = []
 classifiers = [
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
 ]
 

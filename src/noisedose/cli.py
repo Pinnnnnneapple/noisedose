@@ -143,7 +143,7 @@ def _run(args: argparse.Namespace) -> int:
         raise InputError("report paths must differ from each other and the input file")
     for path, render in outputs:
         if path is not None:
-            path.write_text(render(report), encoding="utf-8")
+            path.write_text(render(report), encoding="utf-8", newline="\n")
     print(console_table(report))
     if report["uncertainty"]:
         u = report["uncertainty"]

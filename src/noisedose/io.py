@@ -74,6 +74,9 @@ def _csv_table(
     level_column: Optional[str] = None,
 ) -> Tuple[List[str], List[Tuple[int, List[str]]], str, int]:
     lines = content.splitlines(keepends=True)
+    # Ignore empty physical lines only at EOF; gaps between records are errors.
+    while lines and not lines[-1].strip():
+        lines.pop()
     selected = None
     for index, line in enumerate(lines):
         candidates = []
@@ -196,7 +199,8 @@ def load_log(
     LAS/LAF/Lavg values are imported as supplied, without assuming instrument
     averaging settings. These assumptions emit no warnings. Invalid/empty rows,
     missing levels and nonfinite numbers raise ValueError with path and physical
-    CSV line context. Only lines before the header may be skipped.
+    CSV line context. Leading preamble and trailing blank lines are ignored;
+    empty rows between records are errors. CRLF, LF and CR endings are accepted.
     """
     fixed = None
     if interval_seconds is not None:
@@ -330,7 +334,8 @@ def load_tasks(path: _Path) -> List[Segment]:
     as load_log. JSON is selected by .json suffix or leading '['/'{'. Empty task
     lists, malformed records, missing required fields and nonfinite values raise
     ValueError with path and CSV line or JSON task-item context. No warnings are
-    emitted, and no rows after a CSV header are skipped.
+    emitted. Trailing blank lines are ignored; empty rows between records are
+    errors. CRLF, LF and CR endings are accepted.
     """
     content = _text(path)
     is_json = os.fspath(path).lower().endswith(".json") or content.lstrip().startswith(("[", "{"))
